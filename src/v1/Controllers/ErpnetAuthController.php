@@ -16,6 +16,7 @@ class ErpnetAuthController extends Controller
 
     /**
      * Controller constructor.
+     * @param ErpnetAuthService $erpnetAuthService
      */
     public function __construct(ErpnetAuthService $erpnetAuthService)
     {
@@ -29,10 +30,19 @@ class ErpnetAuthController extends Controller
     /**
      * @param string $provider
      * @param string $id
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return \Illuminate\Contracts\View\View | \Illuminate\Http\Response
      */
     public function login($provider, $id)
     {
-        return $this->service->checkUser($provider, $id);
+        $allData = $this->service->checkUser($provider, $id);
+
+        if (request()->wantsJson()) {
+
+            return response()->json([
+                'data' => $allData,
+            ]);
+        }
+
+        return view('welcome')->with(['data'=>$allData]);
     }
 }

@@ -96,10 +96,12 @@ class ErpnetAuthService
             'provider' => $provider,
             'provider_id' => $id,
         ]);
-        if($foundUser instanceof \Illuminate\Database\Eloquent\Collection)
+        if($foundUser instanceof \Illuminate\Database\Eloquent\Collection && count($foundUser)>0)
             return $foundUser->first();
+
         if($foundUser instanceof \Illuminate\Database\Eloquent\Model)
             return $foundUser;
-        throw new \Exception('findWhere error');
+
+        return null;
     }
 }
