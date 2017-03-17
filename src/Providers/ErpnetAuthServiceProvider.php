@@ -4,7 +4,7 @@ namespace ErpNET\Auth\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-class ErpnetDeliveryServiceProvider extends ServiceProvider
+class ErpnetAuthServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -40,7 +40,7 @@ class ErpnetDeliveryServiceProvider extends ServiceProvider
 
         //Routing
         include $routesDir."api.php";
-        include $routesDir."web.php";
+//        include $routesDir."web.php";
 
     }
 
