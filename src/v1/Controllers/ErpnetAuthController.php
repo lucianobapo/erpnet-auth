@@ -26,8 +26,13 @@ class ErpnetAuthController extends Controller
         $this->service = $erpnetAuthService;
     }
 
+    /**
+     * @param string $provider
+     * @param string $id
+     * @return \Illuminate\Database\Eloquent\Model
+     */
     public function login($provider, $id)
     {
-        $this->service->checkUser($provider, $id);
+        return $this->service->checkUser($provider, $id);
     }
 }

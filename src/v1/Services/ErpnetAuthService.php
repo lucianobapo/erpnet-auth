@@ -26,6 +26,7 @@ use ErpNET\Models\v1\Interfaces\SharedOrderPaymentRepository;
 use ErpNET\Models\v1\Interfaces\SharedCurrencyRepository;
 use ErpNET\Models\v1\Interfaces\OrderService;
 use ErpNET\Models\v1\Interfaces\PartnerService;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class ErpnetAuthService
@@ -48,16 +49,7 @@ class ErpnetAuthService
     /**
      * Service constructor.
      *
-     * @param ProductRepository $productRepository
-     * @param ProductGroupRepository $productGroupRepository
-     * @param OrderRepository $orderRepository
-     * @param AddressRepository $addressRepository
-     * @param PartnerRepository $partnerRepository
-     * @param SharedOrderTypeRepository $sharedOrderTypeRepository
-     * @param SharedOrderPaymentRepository $sharedOrderPaymentRepository
-     * @param SharedCurrencyRepository $sharedCurrencyRepository
-     * @param OrderService $orderService
-     * @param PartnerService $partnerService
+     * @param UserRepository $userRepository
      */
     public function __construct(
                                 UserRepository $userRepository
@@ -92,12 +84,22 @@ class ErpnetAuthService
 //        $this->partnerService = $partnerService;
     }
 
+    /**
+     * @param string $provider
+     * @param string $id
+     * @return \Illuminate\Database\Eloquent\Model
+     * @throws \Exception
+     */
     public function checkUser($provider, $id)
     {
         $foundUser = $this->userRepository->findWhere([
             'provider' => $provider,
             'provider_id' => $id,
         ]);
-        dd($foundUser);
+        if($foundUser instanceof \Illuminate\Database\Eloquent\Collection)
+            return $foundUser->first();
+        if($foundUser instanceof \Illuminate\Database\Eloquent\Model)
+            return $foundUser;
+        throw new \Exception('findWhere error');
     }
 }
