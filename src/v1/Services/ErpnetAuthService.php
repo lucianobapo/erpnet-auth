@@ -96,16 +96,28 @@ class ErpnetAuthService
      */
     public function checkUser($provider, $id)
     {
-        $foundUser = $this->providerRepository->findWhere([
+        $userData = null;
+        $foundProviders = $this->providerRepository->findWhere([
             'provider' => $provider,
             'provider_id' => $id,
         ]);
-        if($foundUser instanceof \Illuminate\Database\Eloquent\Collection && count($foundUser)>0)
-            return $foundUser->first()->user;
+        if($foundProviders instanceof \Illuminate\Database\Eloquent\Collection && count($foundProviders)>0)
+            $userData = $foundProviders->first()->user;
 
-        if($foundUser instanceof \Illuminate\Database\Eloquent\Model)
-            return $foundUser->user;
+        if($foundProviders instanceof \Illuminate\Database\Eloquent\Model)
+            $userData = $foundProviders->user;
 
-        return null;
+        if (is_null($userData)) {
+            return $this->createUser();
+        }
+        else return $userData;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    protected function createUser()
+    {
+
     }
 }
