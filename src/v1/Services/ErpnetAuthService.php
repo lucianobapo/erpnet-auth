@@ -13,6 +13,7 @@ use ErpNET\Models\v1\Criteria\OpenItemOrdersCriteria;
 use ErpNET\Models\v1\Criteria\ProductActiveCriteria;
 use ErpNET\Models\v1\Criteria\ProductGroupActivatedCriteria;
 use ErpNET\Models\v1\Criteria\ProductGroupCategoriesCriteria;
+use ErpNET\Models\v1\Interfaces\ProviderRepository;
 use ErpNET\Models\v1\Interfaces\UserRepository;
 use ErpNET\Models\v1\Interfaces\AddressRepository;
 use ErpNET\Models\v1\Interfaces\ItemOrderRepository;
@@ -31,7 +32,8 @@ use Illuminate\Support\Facades\DB;
 
 class ErpnetAuthService
 {
-    protected $userRepository;
+    protected $providerRepository;
+//    protected $userRepository;
 //    protected $contactRepository;
 //    protected $productRepository;
 //    protected $productGroupRepository;
@@ -52,7 +54,8 @@ class ErpnetAuthService
      * @param UserRepository $userRepository
      */
     public function __construct(
-                                UserRepository $userRepository
+                                ProviderRepository $providerRepository
+//                                UserRepository $userRepository
 //                                ContactRepository $contactRepository,
 //                                ProductRepository $productRepository,
 //                                ProductGroupRepository $productGroupRepository,
@@ -68,7 +71,8 @@ class ErpnetAuthService
 //                                PartnerService $partnerService
     )
     {
-        $this->userRepository = $userRepository;
+        $this->providerRepository = $providerRepository;
+//        $this->userRepository = $userRepository;
 //        $this->contactRepository = $contactRepository;
 //        $this->productRepository = $productRepository;
 //        $this->productGroupRepository = $productGroupRepository;
@@ -92,15 +96,15 @@ class ErpnetAuthService
      */
     public function checkUser($provider, $id)
     {
-        $foundUser = $this->userRepository->findWhere([
+        $foundUser = $this->providerRepository->findWhere([
             'provider' => $provider,
             'provider_id' => $id,
         ]);
         if($foundUser instanceof \Illuminate\Database\Eloquent\Collection && count($foundUser)>0)
-            return $foundUser->first();
+            return $foundUser->first()->user;
 
         if($foundUser instanceof \Illuminate\Database\Eloquent\Model)
-            return $foundUser;
+            return $foundUser->user;
 
         return null;
     }
